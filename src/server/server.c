@@ -6,17 +6,17 @@
 /*   By: flima <flima@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 16:18:23 by flima             #+#    #+#             */
-/*   Updated: 2025/01/17 20:49:32 by flima            ###   ########.fr       */
+/*   Updated: 2025/01/18 17:17:08 by flima            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minitalk.h"
+#include "minitalk.h"
 
 void	signal_handler(int sig, siginfo_t *info, void *context)
 {
-	static unsigned char 	character = 0;
-	static	int				bits = 0;
-	static	pid_t			client_pid = 0;
+	static unsigned char	character = 0;
+	static int				bits = 0;
+	static pid_t			client_pid = 0;
 
 	(void)context;
 	if (client_pid != info->si_pid)
@@ -35,11 +35,12 @@ void	signal_handler(int sig, siginfo_t *info, void *context)
 		bits = 0;
 		character = 0;
 	}
+	kill(client_pid, SIGUSR1);
 }
 
 int	main(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	ft_printf("Server PID: %d\n", getpid());
 	sa.sa_flags = SA_SIGINFO;

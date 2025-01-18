@@ -6,17 +6,25 @@
 /*   By: flima <flima@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 16:18:37 by flima             #+#    #+#             */
-/*   Updated: 2025/01/17 20:50:08 by flima            ###   ########.fr       */
+/*   Updated: 2025/01/18 17:15:04 by flima            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minitalk.h"
+#include "minitalk.h"
+
+int	g_signal_sent = 0;
+
+void	signal_confirmation(int signal)
+{
+	g_signal_sent = 1;
+	(void)signal;
+}
 
 void	send_bit(int pid, int bit)
 {
 	int	signal;
 	int	i;
-	
+
 	if (bit == 0)
 		signal = SIGUSR1;
 	else
@@ -27,7 +35,9 @@ void	send_bit(int pid, int bit)
 		ft_putstr_fd("Error sending the signal\n", 2);
 		exit(EXIT_FAILURE);
 	}
-	
+	while (!g_signal_sent)
+		pause();
+	g_signal_sent = 0;
 }
 
 void	send_char(int pid, unsigned char chr)
@@ -48,19 +58,19 @@ void	send_char(int pid, unsigned char chr)
 void	send_string(int pid, char *str)
 {
 	if (*str == '\0')
-		return;
+		return ;
 	while (*str)
 		send_char(pid, *str++);
-	send_char(pid , '\0');
+	send_char(pid, '\0');
 }
 
 int	main(int argc, char **argv)
 {
-	int	pid;
+	pid_t	pid;
 
 	if (argc != 3)
 	{
-		ft_putstr_fd("Input error\nRequested input: ./client [SERVER PID] [STRING]\n", 2);
+		ft_putstr_fd("Error\nInput: ./client [SERVER PID] [STRING]\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	pid = ft_atoi(argv[1]);
@@ -69,6 +79,7 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Error\nInvalid PID.\n", 2);
 		exit(EXIT_FAILURE);
 	}
+	signal(SIGUSR1, signal_confirmation);
 	send_string(pid, argv[2]);
 	return (0);
 }
