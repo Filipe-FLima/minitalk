@@ -6,7 +6,7 @@
 /*   By: flima <flima@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 16:18:37 by flima             #+#    #+#             */
-/*   Updated: 2025/01/18 17:15:04 by flima            ###   ########.fr       */
+/*   Updated: 2025/01/18 21:26:09 by flima            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	send_bit(int pid, int bit)
 		exit(EXIT_FAILURE);
 	}
 	while (!g_signal_sent)
-		pause();
+		usleep(1);
 	g_signal_sent = 0;
 }
 
@@ -50,18 +50,16 @@ void	send_char(int pid, unsigned char chr)
 	{
 		bit = ((chr >> i) & 1);
 		send_bit(pid, bit);
-		usleep(400);
 		i--;
 	}
 }
 
 void	send_string(int pid, char *str)
 {
-	if (*str == '\0')
-		return ;
 	while (*str)
 		send_char(pid, *str++);
 	send_char(pid, '\0');
+	send_char(pid, '\n');
 }
 
 int	main(int argc, char **argv)
