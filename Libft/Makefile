@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: flima <flima@student.42.fr>                +#+  +:+       +#+         #
+#    By: filipe <filipe@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/12 21:12:39 by flima             #+#    #+#              #
-#    Updated: 2025/01/17 16:35:56 by flima            ###   ########.fr        #
+#    Updated: 2025/01/19 22:03:08 by filipe           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,12 @@ NAME = libft.a
 CC= cc
 OBJ_DIR = objs
 CFLAGS = -Wall -Wextra -Werror -g -I../includes
+
+MSG=1
+RESET   = \033[0m
+GREEN   = \033[32m
+YELLOW  = \033[33m
+BLUE    = \033[34m
 
 SRCS = ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
 		ft_isascii.c ft_isdigit.c ft_isprint.c ft_itoa.c ft_memchr.c \
@@ -35,20 +41,25 @@ AR = ar rcs
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(MSG) $(OBJS)
 	@$(AR) $(NAME) $(OBJS)
-	@echo "Library made!"
+	@echo "$(GREEN)Library [OK]$(RESET)"
 
+$(MSG):
+	@echo "$(BLUE)Compiling library...$(RESET)\n"
+	
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	
 clean:
+	@echo "\n$(GREEN)Object files removed Libft    [OK]$(RESET)"
 	@rm -rf $(OBJ_DIR)
 
 fclean: clean
+	@echo "\n$(GREEN)Executable files removed Libft [OK].$(RESET)"
 	@rm -f $(NAME)
-
+	
 re: fclean all
 
 .PHONY:	 all clean fclean re
