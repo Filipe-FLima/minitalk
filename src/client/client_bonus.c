@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: filipe <filipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/17 16:18:37 by flima             #+#    #+#             */
-/*   Updated: 2025/01/19 13:48:06 by filipe           ###   ########.fr       */
+/*   Created: 2025/01/19 13:24:34 by filipe            #+#    #+#             */
+/*   Updated: 2025/01/19 13:47:21 by filipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 int	g_signal_sent = 0;
 
 void	signal_confirmation(int signal)
 {
-	g_signal_sent = 1;
-	(void)signal;
+	if (signal == SIGUSR1)
+		g_signal_sent = 1;
+	else
+		ft_printf("The message was sent.\n");
 }
 
 void	send_bit(int pid, int bit)
@@ -78,6 +80,7 @@ int	main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	signal(SIGUSR1, signal_confirmation);
+	signal(SIGUSR2, signal_confirmation);
 	send_string(pid, argv[2]);
 	return (0);
 }

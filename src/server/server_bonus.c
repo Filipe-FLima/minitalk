@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: filipe <filipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/17 16:18:23 by flima             #+#    #+#             */
-/*   Updated: 2025/01/19 13:47:00 by filipe           ###   ########.fr       */
+/*   Created: 2025/01/19 13:26:23 by filipe            #+#    #+#             */
+/*   Updated: 2025/01/19 13:42:58 by filipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 void	signal_handler(int sig, siginfo_t *info, void *context)
 {
@@ -32,6 +32,8 @@ void	signal_handler(int sig, siginfo_t *info, void *context)
 	if (bits == 8)
 	{
 		write(1, &character, 1);
+		if (character == '\0')
+			kill(client_pid, SIGUSR2);
 		bits = 0;
 		character = 0;
 	}
